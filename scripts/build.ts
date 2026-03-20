@@ -1,14 +1,15 @@
 import { build as viteBuild, type InlineConfig, type Plugin } from "vite"
-import { execSync } from "child_process"
+// import { execSync } from "child_process"
 import manifest from "../public/manifest.json"
 
 import { svelte } from "@sveltejs/vite-plugin-svelte"
 import tailwindcss from "@tailwindcss/vite"
 import path from "node:path"
 import fs from "node:fs/promises"
+import fsSync from "node:fs"
+import archiver from "archiver"
 
 const PRODUCTION = process.env.MODE === "production"
-// log(JSON.stringify(manifest, null, 2), "manifest")
 
 const tsEntries = ["sw.ts"]
 const svelteEntries = ["content/content.ts", "options/options.html"]
@@ -26,14 +27,12 @@ const commonConfig: InlineConfig = {
     rolldownOptions: {
       output: {
         assetFileNames: "[name].css",
-        entryFileNames: "[name].js" // applied to js files
+        entryFileNames: "[name].js"
       }
     }
   },
-  logLevel: "info"
+  logLevel: "error"
 }
-
-const productionPlugins: Plugin[] = []
 
 async function buildTSEntry(entry: string) {
   const tsConfig: InlineConfig = {
@@ -110,7 +109,6 @@ function log(content: any, status: string = "build") {
 // Setting emptyOutDir at vite config empties folder at every build() run
 async function emptyOutDirOnce() {
   const outDir = path.resolve(commonConfig.root!, commonConfig.build!.outDir!)
-  console.log("[emptying out dir]", outDir)
 
   try {
     await fs.mkdir(outDir, { recursive: true })
@@ -129,14 +127,30 @@ async function emptyOutDirOnce() {
   }
 }
 
+async function createExtensionZip() {
+  const archive = archiver("zip", {
+    zlib: {
+      level: 9
+    }
+  })
+  const fsOuput = fsSync.createWriteStream(
+    `${manifest.name.toLowerCase().replaceAll(" ", "-")}-${
+      manifest.version
+    }.zip`
+  )
+  archive.pipe(fsOuput)
+  archive.directory("dist", false)
+  return archive.finalize()
+}
+
 // run build
 async function run() {
-  log("starting build...", "")
+  log("starting build...", PRODUCTION ? "PRODUCTION MODE" : "DEV MODE")
 
   // log("checking types..", "prebuild")
   // execSync("npx svelte-check && npx tsc --noEmit", { stdio: "inherit" })
 
-  log("emptying out dir..", "prebuild")
+  log("emptying out dir..", "pre-build")
   await emptyOutDirOnce()
 
   log("building typescript entries..")
@@ -146,6 +160,11 @@ async function run() {
   await Promise.all(
     svelteEntries.map((svelteEntry) => buildSvelteEntry(svelteEntry))
   )
+
+  if (PRODUCTION) {
+    log("creating zip file..", "post-build")
+    await createExtensionZip()
+  }
 
   log("done!", "")
 }
