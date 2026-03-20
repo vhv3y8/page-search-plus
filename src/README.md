@@ -1,0 +1,7 @@
+- `lib/` : global library
+  - `chrome/` : chrome api functions
+  - `components/` : svelte components
+- `content/` : content script
+  - `app/` : entry point
+- `options/` : options page
+- `sw.ts` : service worker
