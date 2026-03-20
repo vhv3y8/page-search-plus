@@ -1,63 +1,80 @@
+import { phase } from "@core/adapters/ui/states/phase.svelte"
+
 let timer: ReturnType<typeof setTimeout> | null = null
+let nextRafId: ReturnType<typeof requestAnimationFrame> | null = null
 let lastTarget: HTMLElement | null = null
 
 let mouseX = 0
 let mouseY = 0
 
-const overlay = document.createElement("div")
-overlay.style.position = "fixed"
-overlay.style.pointerEvents = "none"
-overlay.style.padding = "4px"
-overlay.style.borderRadius = "4px"
-overlay.style.border = "2px solid #007bff"
-overlay.style.backgroundColor = "rgba(0, 123, 255, 0.1)"
-overlay.style.zIndex = "9999"
-overlay.style.display = "none"
-// overlay.style.transition = "all 0.05s ease-out"
-document.body.appendChild(overlay)
+let overlayElem: HTMLElement | null = null
+
+function createOverlayAndAppend() {
+  // create overlay
+  const overlay = document.createElement("div")
+  overlay.style.position = "fixed"
+  overlay.style.pointerEvents = "none"
+  overlay.style.padding = "4px"
+  overlay.style.borderRadius = "4px"
+  overlay.style.border = "2px solid #007bff"
+  overlay.style.backgroundColor = "rgba(0, 123, 255, 0.1)"
+  overlay.style.zIndex = "9999"
+  overlay.style.display = "none"
+  // overlay.style.transition = "all 0.05s ease-out"
+
+  // append
+  document.body.appendChild(overlay)
+  overlayElem = overlay
+}
+
+// dom content loaded
+document.addEventListener("DOMContentLoaded", () => {
+  createOverlayAndAppend()
+})
 
 // mousemove
 export function handleSelectMouseMove(e: MouseEvent) {
-  mouseX = e.clientX
-  mouseY = e.clientY
+  if (phase === "select") {
+    mouseX = e.clientX
+    mouseY = e.clientY
 
-  requestAnimationFrame(updateOverlay)
+    nextRafId = requestAnimationFrame(updateOverlay)
+  }
 }
 
 function updateOverlay() {
-  if (timer) clearTimeout(timer)
+  // if (timer) clearTimeout(timer)
+  // timer = setTimeout(() => {}, 100)
 
-  timer = setTimeout(() => {
-    const x = mouseX
-    const y = mouseY
+  const x = mouseX
+  const y = mouseY
 
-    const target = document.elementFromPoint(x, y) as HTMLElement | null
+  const target = document.elementFromPoint(x, y) as HTMLElement | null
 
-    if (
-      !target ||
-      target === document.body ||
-      target === document.documentElement
-    ) {
-      overlay.style.display = "none"
-      return
-    }
+  if (
+    !target ||
+    target === document.body ||
+    target === document.documentElement
+  ) {
+    overlayElem!.style.display = "none"
+    return
+  }
 
-    if (target !== lastTarget) {
-      lastTarget = target
+  if (target !== lastTarget) {
+    lastTarget = target
 
-      const rect = target.getBoundingClientRect()
+    const rect = target.getBoundingClientRect()
 
-      overlay.style.display = "block"
-      overlay.style.width = `${rect.width}px`
-      overlay.style.height = `${rect.height}px`
-      overlay.style.top = `${rect.top - 4 - 2}px`
-      overlay.style.left = `${rect.left - 4 - 2}px`
-    }
+    overlayElem!.style.display = "block"
+    overlayElem!.style.width = `${rect.width}px`
+    overlayElem!.style.height = `${rect.height}px`
+    overlayElem!.style.top = `${rect.top - 4 - 2}px`
+    overlayElem!.style.left = `${rect.left - 4 - 2}px`
+  }
 
-    // console.log("[target]", target, overlay)
-  }, 100)
+  // console.log("[target]", target, overlayElem)
 
-  requestAnimationFrame(updateOverlay)
+  nextRafId = requestAnimationFrame(updateOverlay)
 }
 
 // click
