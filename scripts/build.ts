@@ -21,7 +21,8 @@ const commonConfig: InlineConfig = {
     alias: {
       "@lib": "/lib",
       "@app": "/content/app",
-      "@core": "/content/core"
+      "@core": "/content/core",
+      "@features": "/content/features"
     }
   },
   build: {

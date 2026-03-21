@@ -1,81 +1,112 @@
-import { phase } from "@core/adapters/ui/states/phase.svelte"
+import { getPhase } from "@core/adapters/ui/states/phase.svelte"
+import { endListening, isListening } from "../states/listen.svelte"
+import { setSearchRegion } from "@core/adapters/ui/states/region.svelte"
+import { colors, createOverlay } from "@core/adapters/ui/overlay"
 
 let timer: ReturnType<typeof setTimeout> | null = null
 let nextRafId: ReturnType<typeof requestAnimationFrame> | null = null
-let lastTarget: HTMLElement | null = null
+
+// target to set to search region
+let target: HTMLElement | null = null
+// for immediate overlay for reactivity
+let immediateTarget: HTMLElement | null = null
 
 let mouseX = 0
 let mouseY = 0
 
-let overlayElem: HTMLElement | null = null
+// create target overlay and append
+let {
+  overlayElem: targetOverlayElem,
+  transitOverlay: transitTargetOverlay,
+  hideOverlay: hideTargetOverlay
+} = createOverlay()
+document.body.appendChild(targetOverlayElem)
 
-function createOverlayAndAppend() {
-  // create overlay
-  const overlay = document.createElement("div")
-  overlay.style.position = "fixed"
-  overlay.style.pointerEvents = "none"
-  overlay.style.padding = "4px"
-  overlay.style.borderRadius = "4px"
-  overlay.style.border = "2px solid #007bff"
-  overlay.style.backgroundColor = "rgba(0, 123, 255, 0.1)"
-  overlay.style.zIndex = "9999"
-  overlay.style.display = "none"
-  // overlay.style.transition = "all 0.05s ease-out"
-
-  // append
-  document.body.appendChild(overlay)
-  overlayElem = overlay
-}
-
-// dom content loaded
-document.addEventListener("DOMContentLoaded", () => {
-  createOverlayAndAppend()
+// create target immediate overlay and append
+let {
+  overlayElem: immediateOverlayElem,
+  transitOverlay: transitImmediateOverlay,
+  hideOverlay: hideImmediateOverlay
+} = createOverlay({
+  zIndex: 9998,
+  borderWidth: 0,
+  borderRadius: 0,
+  borderColor: colors["immediateGray"].borderColor,
+  backgroundColor: colors["immediateGray"].backgroundColor
 })
+document.body.appendChild(immediateOverlayElem)
 
-// mousemove
+// onmousemove
 export function handleSelectMouseMove(e: MouseEvent) {
-  if (phase === "select") {
+  if (getPhase() === "select") {
     mouseX = e.clientX
     mouseY = e.clientY
 
-    nextRafId = requestAnimationFrame(updateOverlay)
+    // set immediateTarget
+    immediateTarget = document.elementFromPoint(
+      mouseX,
+      mouseY
+    ) as HTMLElement | null
+
+    // set target with debounce
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      target = immediateTarget
+    }, 250)
+
+    // start loop
+    if (isListening() && !nextRafId) {
+      nextRafId = requestAnimationFrame(updateOverlayLoop)
+    }
   }
 }
 
-function updateOverlay() {
-  // if (timer) clearTimeout(timer)
-  // timer = setTimeout(() => {}, 100)
-
-  const x = mouseX
-  const y = mouseY
-
-  const target = document.elementFromPoint(x, y) as HTMLElement | null
-
-  if (
-    !target ||
-    target === document.body ||
-    target === document.documentElement
-  ) {
-    overlayElem!.style.display = "none"
+// loop function
+function updateOverlayLoop() {
+  if (!isListening()) {
+    cancelAnimationFrame(nextRafId!)
+    nextRafId = null
     return
   }
 
-  if (target !== lastTarget) {
-    lastTarget = target
+  // return when immediate target is invalid
+  if (
+    immediateTarget === null ||
+    immediateTarget === document.documentElement
+  ) {
+    console.log("[immediateTarget is null or html element]", immediateTarget)
+    hideTargetOverlay()
+    hideImmediateOverlay()
 
-    const rect = target.getBoundingClientRect()
-
-    overlayElem!.style.display = "block"
-    overlayElem!.style.width = `${rect.width}px`
-    overlayElem!.style.height = `${rect.height}px`
-    overlayElem!.style.top = `${rect.top - 4 - 2}px`
-    overlayElem!.style.left = `${rect.left - 4 - 2}px`
+    cancelAnimationFrame(nextRafId!)
+    nextRafId = null
+    return
   }
 
-  // console.log("[target]", target, overlayElem)
+  // immediate target overlay
+  if (immediateTarget) {
+    const rect = (immediateTarget as HTMLElement).getBoundingClientRect()
+    transitImmediateOverlay(rect)
+  }
 
-  nextRafId = requestAnimationFrame(updateOverlay)
+  // target overlay
+  if (target) {
+    const rect = (target as HTMLElement).getBoundingClientRect()
+    transitTargetOverlay(rect)
+  }
+
+  // run recursively
+  nextRafId = requestAnimationFrame(updateOverlayLoop)
 }
 
-// click
-export function handleSelectMouseClick() {}
+// onclick
+export function handleSelectMouseClick() {
+  if (isListening() && target) {
+    endListening()
+    setSearchRegion(target)
+
+    // hideTargetOverlay()
+    hideImmediateOverlay()
+    console.log("[onclick] [set search region]", target)
+  }
+}

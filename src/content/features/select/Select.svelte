@@ -1,9 +1,15 @@
 <script lang="ts">
-  import { handleSelectMouseMove } from "./ui/input/mouse"
+  import {
+    handleSelectMouseClick,
+    handleSelectMouseMove
+  } from "./ui/input/mouse"
 </script>
 
 <!-- HTML -->
 
-<svelte:body onmousemove={handleSelectMouseMove} />
+<svelte:body
+  onmousemove={handleSelectMouseMove}
+  onclick={handleSelectMouseClick}
+/>
 
 <!-- Style -->
