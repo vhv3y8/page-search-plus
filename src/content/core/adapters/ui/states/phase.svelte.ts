@@ -5,8 +5,15 @@ let phase: Phase = $state("none")
 
 $effect.root(() => {
   $effect(() => {
-    if (phase === "select") {
-      startListening()
+    switch (phase) {
+      case "select": {
+        startListening()
+        break
+      }
+      case "search": {
+        // dom tree for dev
+        break
+      }
     }
   })
 })

@@ -1,4 +1,4 @@
-import { build as viteBuild, type InlineConfig, type Plugin } from "vite"
+import { build as viteBuild, type InlineConfig } from "vite"
 // import { execSync } from "child_process"
 import manifest from "../public/manifest.json"
 
@@ -25,6 +25,9 @@ const commonConfig: InlineConfig = {
       "@core": "/content/core",
       "@features": "/content/features"
     }
+  },
+  worker: {
+    format: "es"
   },
   build: {
     outDir: "../dist",

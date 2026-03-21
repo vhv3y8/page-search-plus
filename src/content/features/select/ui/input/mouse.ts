@@ -35,6 +35,7 @@ let {
   zIndex: 9998,
   borderWidth: 0,
   borderRadius: 0,
+  padding: 0,
   borderColor: colors["immediateGray"].borderColor,
   backgroundColor: colors["immediateGray"].backgroundColor
 })
@@ -120,7 +121,6 @@ export function handleSelectMouseClick(e: MouseEvent) {
     if (getRegionTarget()) {
       endListening()
       setRegionToSearch()
-      setPhase("none")
 
       timer = null
       nextRafId = null
@@ -130,6 +130,8 @@ export function handleSelectMouseClick(e: MouseEvent) {
       hideImmediateOverlay()
       // show core overlay
       startShowingRegionOverlay()
+
+      setPhase("search")
     }
   }
 }
