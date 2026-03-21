@@ -13,7 +13,5 @@ const styleTag = document.createElement("style")
 styleTag.textContent = globalStyle
 shadowRoot.appendChild(styleTag)
 
-// mount svelte component
+// mount entry svelte component
 mount(App, { target: shadowRoot })
-
-console.log("hi from page search plus. its mounted")

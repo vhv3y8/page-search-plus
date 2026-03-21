@@ -4,6 +4,8 @@
 
   position: fixed;
   inset: 0;
+
+  pointer-events: none;
 }
 
 :host {
@@ -31,7 +33,7 @@
   --primary-8: #bbb;
   --primary-9: #ddd;
 }
-
+/* 
 :host {
   --text: #6b6375;
   --text-h: #08060d;
@@ -327,4 +329,4 @@ code {
     right: 0;
     border-right-color: var(--border);
   }
-}
+} */
