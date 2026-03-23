@@ -1,5 +1,5 @@
 import type { TreeRunner } from "@core/application/ports/TreeRunner"
-import { WebWorkerTreeRunner } from "@core/adapters/webworker/impl/WebWorkerTreeRunner"
+import { WebWorkerTreeRunner } from "../core/adapters/tree/webworker/impl/WebWorkerTreeRunner"
 
-// dependency injection
+// run tree codes at web worker
 export const treeUseCaseRunner: TreeRunner = WebWorkerTreeRunner

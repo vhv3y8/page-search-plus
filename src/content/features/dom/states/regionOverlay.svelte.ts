@@ -1,7 +1,6 @@
+import { getSearchRegion } from "@core/adapters/ui/states/region.svelte"
 import { isListening } from "@features/select/ui/states/listen.svelte"
 import { createOverlay } from "src/content/shared/ui/overlay"
-
-let searchRegion: HTMLElement | null = $state(null)
 
 let showRegionOverlay = $state(false)
 let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null
@@ -33,7 +32,7 @@ $effect.root(() => {
 function regionOverlayLoop() {
   if (!regionOverlayRafId) return
 
-  const rect = searchRegion!.getBoundingClientRect()
+  const rect = getSearchRegion()!.getBoundingClientRect()
   transitOverlay(rect)
 
   regionOverlayRafId = requestAnimationFrame(regionOverlayLoop)
@@ -42,17 +41,9 @@ function regionOverlayLoop() {
 if (import.meta.env.MODE === "development") {
   $effect.root(() => {
     $effect(() => {
-      console.log("[page find plus] [search region updated]", searchRegion)
+      console.log("[page find plus] [search region updated]", getSearchRegion())
     })
   })
-}
-
-// search region functions
-export function getSearchRegion() {
-  return searchRegion
-}
-export function setSearchRegion(elem: HTMLElement) {
-  searchRegion = elem
 }
 
 // show region overlay functions

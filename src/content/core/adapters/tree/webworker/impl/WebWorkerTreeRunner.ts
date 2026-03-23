@@ -8,7 +8,7 @@ let worker: Worker | null = null
 
 export const WebWorkerTreeRunner: TreeRunner = {
   run(command: Command) {
-    // initialize runner if not set
+    // initialize worker if not set
     if (!worker) {
       worker = new WebWorker()
       worker.onmessage = (e) => {
@@ -17,6 +17,7 @@ export const WebWorkerTreeRunner: TreeRunner = {
     }
 
     // send command to worker
+    // if there is ArrayBuffer, add it at second parameter array to transfer
     worker!.postMessage({ command })
   }
 }
