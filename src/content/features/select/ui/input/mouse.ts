@@ -1,11 +1,11 @@
-import { getPhase, setPhase } from "@features/dom/ui/states/phase.svelte"
+import { getPhase, setPhase } from "@features/dom/states/phase.svelte"
 import {
   endListening,
   getRegionTarget,
   isListening,
   setRegionTarget
 } from "../states/listen.svelte"
-import { startShowingRegionOverlay } from "@features/dom/ui/states/region.svelte"
+import { startShowingRegionOverlay } from "@features/dom/states/region.svelte"
 import { colors, createOverlay } from "src/content/shared/ui/overlay"
 import { setRegionToSearch } from "@features/select/usecases/setRegionToSearch"
 

@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte"
   import Select from "../features/select/Select.svelte"
-  import { handleCoreKeydown } from "../features/dom/ui/input/keyboard"
+  import Context from "@features/dom/Context.svelte"
 
   // run bootstrap on mount
   onMount(async () => {
@@ -11,7 +11,7 @@
 
 <!-- HTML -->
 
-<svelte:body onkeydown={handleCoreKeydown} />
+<Context />
 
 <Select />
 

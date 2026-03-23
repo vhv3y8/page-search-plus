@@ -6,6 +6,7 @@
   } from "./ui/input/mouse"
 
   onMount(() => {
+    // to stop propagation to block click action when selecting region
     window.addEventListener("click", handleSelectMouseClick, true)
   })
 </script>

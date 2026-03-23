@@ -1,5 +1,5 @@
 import { isListening } from "@features/select/ui/states/listen.svelte"
-import { createOverlay } from "../../../../shared/ui/overlay"
+import { createOverlay } from "src/content/shared/ui/overlay"
 
 let searchRegion: HTMLElement | null = $state(null)
 

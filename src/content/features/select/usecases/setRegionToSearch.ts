@@ -1,4 +1,4 @@
-import { setSearchRegion } from "@features/dom/ui/states/region.svelte"
+import { setSearchRegion } from "@features/dom/states/region.svelte"
 import { getRegionTarget } from "../ui/states/listen.svelte"
 
 export function setRegionToSearch() {
