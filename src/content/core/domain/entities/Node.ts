@@ -1,10 +1,7 @@
-type SearchTreeNode = SearchNode | EmptyNode
-
-// search node
-export class SearchNode {}
+export type Node = TreeNode | EmptyNode
 
 // empty node
-interface EmptyNode {
+type EmptyNode = {
   readonly type: "EMPTY"
 }
 
@@ -12,3 +9,6 @@ interface EmptyNode {
 export const EMPTY_NODE: EmptyNode = Object.freeze({
   type: "EMPTY"
 })
+
+// search node
+export type TreeNode = {}

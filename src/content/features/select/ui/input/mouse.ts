@@ -1,11 +1,11 @@
-import { getPhase, setPhase } from "@core/adapters/ui/states/phase.svelte"
+import { getPhase, setPhase } from "@features/dom/ui/states/phase.svelte"
 import {
   endListening,
   getRegionTarget,
   isListening,
   setRegionTarget
 } from "../states/listen.svelte"
-import { startShowingRegionOverlay } from "@core/adapters/ui/states/region.svelte"
+import { startShowingRegionOverlay } from "@features/dom/ui/states/region.svelte"
 import { colors, createOverlay } from "src/content/shared/ui/overlay"
 import { setRegionToSearch } from "@features/select/usecases/setRegionToSearch"
 
@@ -120,10 +120,12 @@ export function handleSelectMouseClick(e: MouseEvent) {
 
     if (getRegionTarget()) {
       endListening()
-      setRegionToSearch()
 
       timer = null
       nextRafId = null
+
+      // update global region state
+      setRegionToSearch()
 
       // hide all listen overlays
       hideTargetOverlay()
