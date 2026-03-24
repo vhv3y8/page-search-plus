@@ -1,8 +1,7 @@
 // This file runs on main thread (content script).
-import type { TreeRunner } from "@core/application/ports/TreeRunner"
-import type { Command } from "../../../../../core/application/usecases/dto/Command"
-
 import WebWorker from "../webworker?worker"
+import type { Command } from "@core/application/dto/Command"
+import type { TreeRunner } from "@common/ports/TreeRunner"
 
 let worker: Worker | null = null
 
@@ -11,8 +10,10 @@ export const WebWorkerTreeRunner: TreeRunner = {
     // initialize worker if not set
     if (!worker) {
       worker = new WebWorker()
-      worker.onmessage = (e) => {
-        console.log("Worker로부터 응답:", e.data)
+      worker.onmessage = (e: { data: { response: Response } }) => {
+        const response = e.data.response
+        // handle worker response at main
+        console.log("Response from Worker:", e.data)
       }
     }
 

@@ -1,4 +1,3 @@
-import { getPhase, setPhase } from "@features/dom/states/phase.svelte"
 import {
   endListening,
   getRegionTarget,
@@ -7,7 +6,8 @@ import {
 } from "../states/listen.svelte"
 import { colors, createOverlay } from "../../../../common/ui/factory/overlay"
 import { setRegionToSearch } from "@features/select/usecases/setRegionToSearch"
-import { startShowingRegionOverlay } from "@features/dom/states/regionOverlay.svelte"
+import { getPhase, setPhase } from "@app/states/phase.svelte"
+import { startShowingRegionOverlay } from "../states/domRegionOverlay.svelte"
 
 let timer: ReturnType<typeof setTimeout> | null = null
 let nextRafId: ReturnType<typeof requestAnimationFrame> | null = null

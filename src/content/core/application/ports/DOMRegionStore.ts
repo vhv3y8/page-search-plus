@@ -1,1 +1,3 @@
-export interface DOMRegionStore {}
+export interface DOMRegionStore {
+  setDOMRegion(region: HTMLElement): boolean
+}

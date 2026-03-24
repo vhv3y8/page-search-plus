@@ -1,7 +1,6 @@
-// import { getSearchRegion } from "@core/adapters/ui/states/region.svelte"
-import { isListening } from "@features/select/ui/states/listen.svelte"
-import { createOverlay } from "../../../../common/ui/factory/overlay"
 import { getSearchRegion } from "@core/adapters/dom/region.svelte"
+import { createOverlay } from "@common/ui/factory/overlay"
+import { isListening } from "./listen.svelte"
 
 let showRegionOverlay = $state(false)
 let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null
@@ -25,9 +24,9 @@ $effect.root(() => {
   })
 
   // // hide overlay on re-listen
-  // $effect(() => {
-  //   if (isListening()) endShowingRegionOverlay()
-  // })
+  $effect(() => {
+    if (isListening()) endShowingRegionOverlay()
+  })
 })
 
 function regionOverlayLoop() {

@@ -1,18 +1,15 @@
 // This file is entry point of web worker.
-import type { Command } from "@core/application/usecases/dto/Command"
-import { treeBootstrap, treeUseCaseRegistryMapper } from "../treeBootstrap"
+import type { Command } from "@core/application/dto/Command"
+import { runTreeBootstrap } from "../treeBootstrap"
 
-// bootstrap
-treeBootstrap()
+// run tree bootstrap
+const treeUseCaseRegistry = runTreeBootstrap()
 
 // handle message
 self.onmessage = async ({ data }: { data: { command: Command } }) => {
   self.postMessage(`[hi from worker!]`)
-
   const { command } = data
-  const useCase = treeUseCaseRegistryMapper(command)
-  const response = useCase(command)
-  if (response) {
-    self.postMessage({ response })
-  }
+
+  // run use case
+  treeUseCaseRegistry[command.cmd](command)
 }

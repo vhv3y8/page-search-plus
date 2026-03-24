@@ -23,7 +23,8 @@ const commonConfig: InlineConfig = {
       "@lib": "/lib",
       "@app": "/content/app",
       "@core": "/content/core",
-      "@features": "/content/features"
+      "@features": "/content/features",
+      "@common": "/content/common"
     }
   },
   worker: {

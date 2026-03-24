@@ -1,22 +1,30 @@
+import type { Command } from "@core/application/dto/Command"
+import type { TreeStore } from "@core/application/ports/TreeStore"
+import { createInitializeTreeUseCase } from "@core/application/usecases/initializeTree"
+import { createSearchUseCase } from "@core/application/usecases/search"
+import { createUpdateTreeNodeUseCase } from "@core/application/usecases/updateTreeNode"
+import { globalTreeStore } from "@core/adapters/tree/globalTreeStore"
+
+export type TreeUseCaseRegistry = Record<Command["cmd"], (...any: any) => any>
+
 // This is needed because web worker is different file entry to content script main.
 // so all codes that's possible to run at web worker should be here
 // it's up to composition root(`app/bootstrap.ts`) to whether run these at main thread or worker thread
-import type { Command } from "@core/application/usecases/dto/Command"
+export function runTreeBootstrap(): TreeUseCaseRegistry {
+  // select output ports
+  const treeStore: TreeStore = globalTreeStore
 
-import { initializeTree } from "@core/application/usecases/initializeTree"
-import { updateTreeNode } from "@core/application/usecases/updateTreeNode"
-import { search } from "@core/application/usecases/search"
+  // create use cases
+  const initializeTree = createInitializeTreeUseCase(treeStore)
+  const search = createSearchUseCase(treeStore)
+  const updateTreeNode = createUpdateTreeNodeUseCase(treeStore)
 
-// handle all use cases
-export const treeUseCaseRegistry = {
-  INITIALIZE: initializeTree,
-  UPDATE_NODE: updateTreeNode,
-  SEARCH: search
-} satisfies Record<Command["cmd"], (...any: any) => any>
+  // create use case registry
+  const treeUseCaseRegistry: TreeUseCaseRegistry = {
+    INITIALIZE: initializeTree,
+    SEARCH: search,
+    UPDATE_NODE: updateTreeNode
+  }
 
-export function treeUseCaseRegistryMapper<T extends Command>(command: T) {
-  return treeUseCaseRegistry[command.cmd] as (command: T) => any
+  return treeUseCaseRegistry
 }
-
-// import all adapters
-export function treeBootstrap() {}

@@ -1,12 +1,17 @@
 import type { TreeStore } from "../ports/TreeStore"
-import type { InitializeCommand } from "./dto/Command"
+import type { InitializeCommand } from "../dto/Command"
 
-// search region이 업데이트 될 때 실행
-export function initializeTree(
-  command: InitializeCommand,
-  treeStore: TreeStore
-) {
-  const { treeData } = command
+// input port for input adapters to inject
+export type InitializeTreeUseCase = ReturnType<
+  typeof createInitializeTreeUseCase
+>
 
-  // treeStore.initializeTree(tree)
+// inject output port with currying
+export function createInitializeTreeUseCase(treeStore: TreeStore) {
+  // search region이 업데이트 될 때 실행
+  return function initializeTree(command: InitializeCommand) {
+    const { treeData } = command
+
+    // treeStore.initializeTree(treeData)
+  }
 }

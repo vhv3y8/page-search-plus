@@ -1,4 +1,4 @@
-import type { Tree } from "../entities/Tree"
+import type { Tree } from "../entities/tree/Tree"
 import type { SearchQuery } from "../entities/search/SearchQuery"
 import { SearchResult } from "../entities/search/SearchResult"
 
