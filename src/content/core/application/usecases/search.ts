@@ -1,4 +1,4 @@
-import type { TreeStore } from "@core/domain/ports/TreeStore"
+import type { TreeStore } from "../ports/TreeStore"
 import type { SearchCommand } from "./dto/Command"
 
 // 검색 페이즈에서 유저 입력이 변할 때마다 실행

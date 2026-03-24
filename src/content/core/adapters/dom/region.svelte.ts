@@ -1,4 +1,5 @@
-import type { DOMRegion } from "../../domain/entities/dom/DOMRegion"
+import type { DOMRegion } from "../../domain/entities/DOMRegion"
+import type { DOMRegionStore } from "../../application/ports/DOMRegionStore"
 
 // dom region to search
 let searchRegion: DOMRegion = $state(null)
@@ -16,3 +17,5 @@ export function getSearchRegion() {
 export function setSearchRegion(elem: HTMLElement) {
   searchRegion = elem
 }
+
+export const globalDOMRegionStore: DOMRegionStore = {}

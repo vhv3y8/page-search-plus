@@ -1,4 +1,4 @@
-import type { TreeStore } from "@core/domain/ports/TreeStore"
+import type { TreeStore } from "../ports/TreeStore"
 import type { InitializeCommand } from "./dto/Command"
 
 // search region이 업데이트 될 때 실행

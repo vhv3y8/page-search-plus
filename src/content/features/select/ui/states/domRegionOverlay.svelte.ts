@@ -1,6 +1,6 @@
 // import { getSearchRegion } from "@core/adapters/ui/states/region.svelte"
 import { isListening } from "@features/select/ui/states/listen.svelte"
-import { createOverlay } from "../../../common/ui/overlay"
+import { createOverlay } from "../../../../common/ui/factory/overlay"
 import { getSearchRegion } from "@core/adapters/dom/region.svelte"
 
 let showRegionOverlay = $state(false)

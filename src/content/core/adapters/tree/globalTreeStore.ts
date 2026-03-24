@@ -1,5 +1,5 @@
 import type { Tree } from "@core/domain/entities/Tree"
-import type { TreeStore } from "@core/domain/ports/TreeStore"
+import type { TreeStore } from "@core/application/ports/TreeStore"
 
 export let tree: Tree | null = null
 
