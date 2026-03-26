@@ -8,6 +8,7 @@ let {
   hideOverlay: hideTargetOverlay
 } = createOverlay()
 document.body.appendChild(targetOverlayElem)
+export { hideTargetOverlay }
 
 // create target immediate overlay and append
 let {
@@ -31,9 +32,23 @@ let immediateTarget: HTMLElement | null = null
 
 let nextRafId: ReturnType<typeof requestAnimationFrame> | null = null
 
-// start / end loop
+// start / end loop loop
 export function startTargetOverlayLoopIfNotRunning() {
-  if (!nextRafId) nextRafId = requestAnimationFrame(updateOverlayLoop)
+  if (!nextRafId) {
+    nextRafId = requestAnimationFrame(updateOverlayLoop)
+  }
+}
+
+function endTargetOverlayLoop() {
+  // cancel animation frame
+  cancelAnimationFrame(nextRafId!)
+  nextRafId = null
+  // set targets to null
+  regionTarget = null
+  immediateTarget = null
+  // hide overlays
+  hideImmediateOverlay()
+  hideTargetOverlay()
 }
 
 // update targets
@@ -49,12 +64,7 @@ export function updateOverlayTarget(targetElem: HTMLElement) {
 function updateOverlayLoop() {
   // stop loop based on listen state
   if (!isListening()) {
-    // cancel animation frame
-    cancelAnimationFrame(nextRafId!)
-    nextRafId = null
-    // hide overlays
-    hideImmediateOverlay()
-    hideTargetOverlay()
+    endTargetOverlayLoop()
     return
   }
 
@@ -69,7 +79,7 @@ function updateOverlayLoop() {
         "[page find plus] [immediateTarget is null or html element]",
         immediateTarget
       )
-    // hideTargetOverlay()
+    hideTargetOverlay()
     hideImmediateOverlay()
 
     cancelAnimationFrame(nextRafId!)

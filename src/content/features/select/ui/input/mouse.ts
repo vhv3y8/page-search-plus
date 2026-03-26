@@ -2,7 +2,6 @@ import { endListeningSelect, isListening } from "../states/listen.svelte"
 import { createSelectDOMRegion } from "@features/select/usecases/selectDOMRegion"
 import { getPhase, setPhase } from "@app/states/phase.svelte"
 import { startShowingRegionOverlay } from "../states/regionOverlay.svelte"
-import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
 import { globalDOMRegionStore } from "@core/adapters/dom/region.svelte"
 import {
   regionTarget,

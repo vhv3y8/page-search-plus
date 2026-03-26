@@ -14,6 +14,7 @@ import { handleGlobalKeydown } from "./input/keyboard"
 import {
   createInitializeTreeEffect,
   createShowDOMRegionOverlayEffect,
+  hideRegionOverlayAtListeningEffect,
   startListeningAtSelectPhaseEffect
 } from "@features/select/ui/input/state"
 
@@ -67,6 +68,9 @@ window.addEventListener("click", handleSelectMouseClick, true)
 $effect.root(() => {
   $effect(() => {
     startListeningAtSelectPhaseEffect()
+  })
+  $effect(() => {
+    hideRegionOverlayAtListeningEffect()
   })
   $effect(() => {
     showDOMRegionOverlayEffect()

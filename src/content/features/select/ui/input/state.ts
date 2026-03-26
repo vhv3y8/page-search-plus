@@ -1,16 +1,16 @@
 import { createOverlay } from "@common/ui/factory/overlay"
 import type { DOMRegionStore } from "@core/application/ports/DOMRegionStore"
-import { isShowingRegionOverlay } from "../states/regionOverlay.svelte"
+import {
+  endShowingRegionOverlay,
+  isShowingRegionOverlay
+} from "../states/regionOverlay.svelte"
 import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
 import { getPhase } from "@app/states/phase.svelte"
 import { isListening, startListeningSelect } from "../states/listen.svelte"
+import { hideTargetOverlay } from "../targetOverlay"
 
 // listening state
 export function startListeningAtSelectPhaseEffect() {
-  if (import.meta.env.MODE === "development") {
-    console.log("[page find plus] [select] [phase change]", getPhase())
-  }
-
   if (getPhase() === "select") {
     if (!isListening()) startListeningSelect()
   }
@@ -18,6 +18,18 @@ export function startListeningAtSelectPhaseEffect() {
   // else {
   //     if (isListening()) endListeningSelect()
   // }
+}
+
+export function hideRegionOverlayAtListeningEffect() {
+  if (isListening()) {
+    endShowingRegionOverlay()
+    hideTargetOverlay()
+
+    if (regionOverlayRafId) {
+      cancelAnimationFrame(regionOverlayRafId)
+      regionOverlayRafId = null
+    }
+  }
 }
 
 // initialize tree on dom region change
@@ -32,16 +44,16 @@ export function createInitializeTreeEffect(
 }
 
 // dom region overlay
+let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null
+// create overlay and append to body
+let { overlayElem, transitOverlay, hideOverlay } = createOverlay({
+  backgroundColor: "transparent"
+})
+document.body.appendChild(overlayElem)
+
 export function createShowDOMRegionOverlayEffect(
   domRegionStore: DOMRegionStore
 ) {
-  let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null
-  // create overlay and append to body
-  let { overlayElem, transitOverlay, hideOverlay } = createOverlay({
-    backgroundColor: "transparent"
-  })
-  document.body.appendChild(overlayElem)
-
   // loop function
   function regionOverlayLoop() {
     if (!regionOverlayRafId) return
@@ -56,7 +68,10 @@ export function createShowDOMRegionOverlayEffect(
   // effect adapter
   return function showDOMRegionOverlayEffect() {
     if (import.meta.env.MODE === "development") {
-      console.log("[page find plus] [select] [DOMRegion change]")
+      console.log(
+        "[page find plus] [select] [DOMRegion change]",
+        domRegionStore.getDOMRegion()
+      )
     }
 
     if (isShowingRegionOverlay()) {

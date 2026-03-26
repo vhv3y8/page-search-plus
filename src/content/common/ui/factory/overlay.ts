@@ -77,6 +77,8 @@ export function createOverlay({
   // hide overlay when target is not valid
   const hideOverlay = () => {
     overlay.style.display = "none"
+    overlay.style.width = `0px`
+    overlay.style.height = `0px`
   }
 
   return { overlayElem: overlay, transitOverlay, hideOverlay }
