@@ -1,4 +1,4 @@
-import type { DOMRegionStore } from "@core/domain/ports/DOMRegionStore"
+import type { DOMRegionStore } from "@core/application/ports/SearchRegionStore"
 
 // inject output port with currying
 export function createSelectDOMRegion(domRegionStore: DOMRegionStore) {

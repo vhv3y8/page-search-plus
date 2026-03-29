@@ -4,11 +4,11 @@ import {
 } from "@features/select/ui/input/mouse"
 import { WebWorkerTreeRunner } from "../common/adapters/treerunner/webworker/impl/WebWorkerTreeRunner"
 import type { TreeRunner } from "../common/ports/TreeRunner"
-import type { DOMRegionStore } from "@core/domain/ports/DOMRegionStore"
+import type { DOMRegionStore } from "@core/application/ports/SearchRegionStore"
 import { globalDOMRegionStore } from "@core/adapters/dom/region.svelte"
 import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
 import type { SearchUseCase } from "@core/application/usecases/search"
-import type { Command } from "@core/application/dto/Command"
+import type { Command } from "../core/application/models/dto/Command"
 import type { UpdateTreeNodeUseCase } from "@core/application/usecases/updateTreeNode"
 import { handleGlobalKeydown } from "./input/keyboard"
 import {

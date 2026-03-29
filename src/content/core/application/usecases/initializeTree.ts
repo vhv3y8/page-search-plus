@@ -1,5 +1,5 @@
-import type { TreeStore } from "../../domain/ports/TreeStore"
-import type { InitializeCommand } from "../dto/Command"
+import type { TreeStore } from "../ports/TreeStore"
+import type { InitializeCommand } from "../models/dto/Command"
 
 // input port for input adapters to inject
 export type InitializeTreeUseCase = ReturnType<
@@ -10,6 +10,7 @@ export type InitializeTreeUseCase = ReturnType<
 export function createInitializeTreeUseCase(treeStore: TreeStore) {
   // run at dom region update
   return function initializeTree(command: InitializeCommand) {
+    // @ts-ignore
     const { treeData } = command
 
     // treeStore.initializeTree(treeData)

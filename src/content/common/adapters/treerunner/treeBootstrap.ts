@@ -1,11 +1,11 @@
-import type { TreeStore } from "@core/domain/ports/TreeStore"
-import { globalTreeStore } from "@core/adapters/tree/globalTreeStore"
+import type { TreeStore } from "@core/application/ports/TreeStore"
+import { globalTreeStore } from "@core/adapters/tree/impl/globalTreeStore"
 
 import { createInitializeTreeUseCase } from "@core/application/usecases/initializeTree"
 import { createSearchUseCase } from "@core/application/usecases/search"
 import { createUpdateTreeNodeUseCase } from "@core/application/usecases/updateTreeNode"
 
-import type { Command } from "@core/application/dto/Command"
+import type { Command } from "@core/application/models/dto/Command"
 
 export type TreeUseCaseRegistry = Record<Command["cmd"], (...any: any) => any>
 

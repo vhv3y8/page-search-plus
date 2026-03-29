@@ -1,5 +1,5 @@
 // This file is entry point of web worker.
-import type { Command } from "@core/application/dto/Command"
+import type { Command } from "@core/application/models/dto/Command"
 
 // run tree bootstrap
 import { runTreeBootstrap } from "../treeBootstrap"
