@@ -1,6 +1,6 @@
-import { createOverlay } from "@common/ui/factories/overlay"
+import { createOverlay } from "src/content/shared/ui/factories/overlay"
 import { isListening } from "./states/listen.svelte"
-import { overlayColors } from "@common/ui/colors"
+import { overlayColors } from "src/content/shared/ui/colors"
 
 // create target overlay and append
 let {

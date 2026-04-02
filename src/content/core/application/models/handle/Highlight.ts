@@ -1,1 +1,3 @@
-export interface HighlightHandle {}
+export interface HighlightHandle {
+  focus(): void
+}

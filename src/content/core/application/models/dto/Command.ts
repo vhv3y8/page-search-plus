@@ -1,4 +1,4 @@
-import type { DOMRegion } from "@core/adapters/dom/model/DOMRegion"
+import type { DOMRegion } from "@core/adapters/dom/models/DOMRegion"
 
 export type Command = InitializeCommand | UpdateNodeCommand | SearchCommand
 

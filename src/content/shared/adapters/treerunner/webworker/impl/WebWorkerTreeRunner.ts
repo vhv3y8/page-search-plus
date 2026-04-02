@@ -3,7 +3,7 @@
 import WebWorker from "../webworker?worker"
 
 import type { Command } from "../../../../../core/application/models/dto/Command"
-import type { TreeRunner } from "@common/ports/TreeRunner"
+import type { TreeRunner } from "src/content/shared/ports/TreeRunner"
 import type { DOMRegionSerializer } from "../../../../ports/serializer/DOMRegionSerializer"
 
 let worker: Worker = new WebWorker()

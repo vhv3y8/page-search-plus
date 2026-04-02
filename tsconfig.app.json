@@ -19,12 +19,14 @@
 
     // aliases for ide
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@lib/*": ["src/lib/*"],
       "@app/*": ["src/content/app/*"],
       "@core/*": ["src/content/core/*"],
       "@features/*": ["src/content/features/*"],
-      "@common/*": ["src/content/common/*"]
+      "@infrastructure/*": ["src/content/infrastructure/*"],
+      "@shared/*": ["src/content/shared/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]

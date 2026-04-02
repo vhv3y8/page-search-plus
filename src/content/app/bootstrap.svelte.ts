@@ -2,8 +2,8 @@ import {
   handleSelectMouseClick,
   handleSelectMouseMove
 } from "@features/select/ui/input/mouse"
-import { WebWorkerTreeRunner } from "../common/adapters/treerunner/webworker/impl/WebWorkerTreeRunner"
-import type { TreeRunner } from "../common/ports/TreeRunner"
+import { WebWorkerTreeRunner } from "../shared/adapters/treerunner/webworker/impl/WebWorkerTreeRunner"
+import type { TreeRunner } from "../shared/ports/TreeRunner"
 import type { DOMRegionStore } from "@core/application/ports/SearchRegionStore"
 import { globalDOMRegionStore } from "@core/adapters/dom/region.svelte"
 import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"

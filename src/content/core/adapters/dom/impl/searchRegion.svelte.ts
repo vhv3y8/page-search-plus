@@ -1,4 +1,4 @@
-import type { DOMRegion } from "../model/DOMRegion"
+import type { DOMRegion } from "../models/DOMRegion"
 import type { SearchRegionStore } from "../../../application/ports/SearchRegionStore"
 
 // dom region to search

@@ -1,4 +1,4 @@
-import { createOverlay } from "@common/ui/factories/overlay"
+import { createOverlay } from "src/content/shared/ui/factories/overlay"
 import {
   endShowingRegionOverlay,
   isShowingRegionOverlay
@@ -7,7 +7,7 @@ import type { InitializeTreeUseCase } from "@core/application/usecases/initializ
 import { getPhase } from "@app/states/phase.svelte"
 import { isListening, startListeningSelect } from "../states/listen.svelte"
 import { hideTargetOverlay } from "../targetOverlay"
-import type { DOMRegion } from "@core/adapters/dom/model/DOMRegion"
+import type { DOMRegion } from "@core/adapters/dom/models/DOMRegion"
 import type { SearchRegionStore } from "@core/application/ports/SearchRegionStore"
 
 // listening state

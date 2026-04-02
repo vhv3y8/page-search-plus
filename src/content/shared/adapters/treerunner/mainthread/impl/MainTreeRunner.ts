@@ -1,4 +1,4 @@
-import type { TreeRunner } from "@common/ports/TreeRunner"
+import type { TreeRunner } from "src/content/shared/ports/TreeRunner"
 import type { Command } from "@core/application/models/dto/Command"
 import { runTreeBootstrap } from "../../treeBootstrap"
 
