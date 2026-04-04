@@ -28,7 +28,7 @@ import {
   type TransportResolver
 } from "@infra/adapters/TransportResolver"
 import type { Transport } from "@infra/ports/Transport"
-import type { Serializer } from "@infra/ports/Serializer"
+import type { Serializer } from "../infra/ports/Serializer"
 import { createTransferableSerializer } from "@infra/adapters/webworker/TransferableSerializer"
 import { createWebWorkerTransport } from "@infra/adapters/webworker/WebWorkerTransport"
 
@@ -69,6 +69,9 @@ const domRegionStore: DOMRegionStore = globalDOMRegionStore
 // const search: SearchUseCase = runTreeUseCase
 // const updateTreeNode: UpdateTreeNodeUseCase = runTreeUseCase
 const treeFacade: TreeFacade = createTreeFacade(treeTransportResolver)
+// const initializeTree = treeFacade.initializeTree
+// const search = treeFacade.search
+// const updateTreeNode = treeFacade.updateTreeNode
 
 // select
 // const selectDOMRegion = createSelectDOMRegion(domRegionStore)

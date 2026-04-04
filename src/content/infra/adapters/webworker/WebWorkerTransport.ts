@@ -1,4 +1,4 @@
-import type { Serializer } from "src/content/infra/ports/Serializer"
+import type { Serializer } from "../../ports/Serializer"
 import type { Transport } from "src/content/infra/ports/Transport"
 
 // @ts-ignore

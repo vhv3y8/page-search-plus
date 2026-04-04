@@ -1,4 +1,4 @@
-import type { DynamicStrategy } from "@infra/ports/DynamicStrategy"
+import type { DynamicStrategy } from "../ports/DynamicStrategy"
 import type { Transport } from "@infra/ports/Transport"
 
 type TransportName = "main" | "webworker"
@@ -6,7 +6,8 @@ export type TransportRecord = Partial<Record<TransportName, Transport>>
 
 export interface TransportResolver extends DynamicStrategy {
   getStrategy(): Transport
-  setTransportTo(name: TransportName): void
+  setStrategy(name: TransportName): void
+  // setTransportTo(name: TransportName): void
 }
 
 export function createTransportResolver(
@@ -18,7 +19,7 @@ export function createTransportResolver(
     getStrategy() {
       return transports[treeTransportName]!
     },
-    setTransportTo(name) {
+    setStrategy(name) {
       treeTransportName = name
     }
   } satisfies TransportResolver
