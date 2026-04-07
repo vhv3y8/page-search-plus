@@ -1,14 +1,17 @@
+import { getPhase } from "@app/phase.svelte"
 import { createOverlay } from "src/content/shared/ui/factories/overlay"
 import {
   endShowingRegionOverlay,
   isShowingRegionOverlay
 } from "../states/regionOverlay.svelte"
 import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
-import { getPhase } from "@app/states/phase.svelte"
 import { isListening, startListeningSelect } from "../states/listen.svelte"
 import { hideTargetOverlay } from "../targetOverlay"
-import type { DOMRegion } from "@core/adapters/dom/models/DOMRegion"
-import type { SearchRegionStore } from "@core/application/ports/SearchRegionStore"
+import type { TransportNameResolver } from "@infra/adapters/TransportNameResolver"
+import type {
+  SearchRegion,
+  SearchRegionStore
+} from "@core/adapters/dom/models/SearchRegion"
 
 // listening state
 export function startListeningAtSelectPhaseEffect() {
@@ -35,7 +38,8 @@ export function hideRegionOverlayAtListeningEffect() {
 
 // initialize tree on dom region change
 export function createInitializeTreeEffect(
-  domRegionStore: SearchRegionStore,
+  searchRegionStore: SearchRegionStore,
+  transportNameResolver: TransportNameResolver,
   initializeTreeUseCase: InitializeTreeUseCase
 ) {
   return function initializeTreeEffect() {
@@ -45,7 +49,7 @@ export function createInitializeTreeEffect(
   }
 }
 
-function createTreeFromDOMRegion(domRegion: DOMRegion) {}
+function createTreeFromSearchRegion(domRegion: SearchRegion) {}
 
 // dom region overlay
 let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null
@@ -55,26 +59,26 @@ let { overlayElem, transitOverlay, hideOverlay } = createOverlay({
 })
 document.body.appendChild(overlayElem)
 
-export function createShowDOMRegionOverlayEffect(
-  domRegionStore: DOMRegionStore
+export function createShowSearchRegionOverlayEffect(
+  searchRegionStore: SearchRegionStore
 ) {
   // loop function
   function regionOverlayLoop() {
     if (!regionOverlayRafId) return
 
     // calculate and update
-    const rect = domRegionStore.getDOMRegion().getBoundingClientRect()
+    const rect = searchRegionStore.getSearchRegion().getBoundingClientRect()
     transitOverlay(rect)
 
     regionOverlayRafId = requestAnimationFrame(regionOverlayLoop)
   }
 
   // effect adapter
-  return function showDOMRegionOverlayEffect() {
+  return function showSearchRegionOverlayEffect() {
     if (import.meta.env.MODE === "development") {
       console.log(
-        "[page find plus] [select] [DOMRegion change]",
-        domRegionStore.getDOMRegion()
+        "[page find plus] [select] [SearchRegion change]",
+        searchRegionStore.getSearchRegion()
       )
     }
 

@@ -1,18 +1,22 @@
-import type { DOMRegion } from "../models/DOMRegion"
-import type { SearchRegionStore } from "../../../application/ports/SearchRegionStore"
+import {
+  convertSearchRegionToTree,
+  type SearchRegion,
+  type SearchRegionStore
+} from "../models/SearchRegion"
 
 // dom region to search
-let searchRegion: DOMRegion | null = $state(null)
+let searchRegion: SearchRegion = $state(document.body)
 
 export const searchRegionStore: SearchRegionStore = {
   getSearchRegion() {
-    if (!searchRegion) {
-      searchRegion = document.body
-    }
     return searchRegion
   },
-  setSearchRegion(region: DOMRegion) {
+  setSearchRegion(region: SearchRegion) {
     searchRegion = region
     return true
+  },
+
+  regionToTree() {
+    return convertSearchRegionToTree(searchRegion)
   }
 }

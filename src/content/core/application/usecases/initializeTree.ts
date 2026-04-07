@@ -1,6 +1,5 @@
-import type { TreeStore } from "../ports/TreeStore"
-import type { InitializeCommand } from "../models/dto/TreeCommand"
 import type { Tree } from "@core/domain/entities/Tree"
+import type { TreeStore } from "../ports/TreeStore"
 
 // input port for input adapters to inject
 export type InitializeTreeUseCase = ReturnType<
@@ -10,9 +9,8 @@ export type InitializeTreeUseCase = ReturnType<
 // inject output port with currying
 export function createInitializeTreeUseCase(treeStore: TreeStore) {
   // run at dom region update
-  return function initializeTree(treeData: Tree) {
-    // @ts-ignore
-    // const { treeData } = command
-    treeStore.initializeTree(treeData)
+  return function initializeTree(tree: Tree) {
+    // const treeData = searchRegionStore.regionToTree()
+    treeStore.initializeTree(tree)
   }
 }

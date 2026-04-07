@@ -5,11 +5,6 @@ import type { Facade } from "./ports/Facade"
 // lookup
 export type CommandLookup<F extends Facade> = Record<keyof F, string>
 export type MethodLookup<F extends Facade> = Invert<CommandLookup<F>>
-// command
-type Command<F extends Facade, C extends keyof MethodLookup<F>> = {
-  type: C
-  payload: Parameters<F[Extract<MethodLookup<F>[C], keyof F>]>
-}
 
 export function createMethodLookup<
   F extends Facade,
@@ -23,20 +18,23 @@ export function createMethodLookup<
   return methodLookup
 }
 
-// command bus
-export function createUseCaseProxy() {
-  // return new Proxy({}, )
-}
-
+// command
 export function createCommandSender<F extends Facade>(
   transport: Transport,
   commandLookup: CommandLookup<F>
 ) {
-  return function send(methodName: keyof F, parameters: any) {
-    transport.send({ type: commandLookup[methodName], payload: parameters })
+  return async function send(methodName: keyof F, parameters: any) {
+    return await transport.send({
+      type: commandLookup[methodName],
+      payload: parameters
+    })
   }
 }
 
+type Command<F extends Facade, C extends keyof MethodLookup<F>> = {
+  type: C
+  payload: Parameters<F[Extract<MethodLookup<F>[C], keyof F>]>
+}
 export function createCommandExecutor<F extends Facade>(
   facade: F,
   methodLookup: MethodLookup<F>

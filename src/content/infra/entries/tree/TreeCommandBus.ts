@@ -4,8 +4,7 @@ import {
   createCommandExecutor,
   createCommandSender,
   createMethodLookup,
-  type CommandLookup,
-  type MethodLookup
+  type CommandLookup
 } from "@infra/CommandBus"
 
 export const treeCommandLookup = {
@@ -13,14 +12,11 @@ export const treeCommandLookup = {
   search: "SEARCH",
   updateTreeNode: "UPDATE_NODE"
 } satisfies CommandLookup<TreeFacade>
-const treeMethodLookup = createMethodLookup(
-  treeCommandLookup
-) satisfies MethodLookup<TreeFacade>
+const treeMethodLookup = createMethodLookup(treeCommandLookup)
 
 export function createTreeCommandSender(transport: Transport) {
   return createCommandSender(transport, treeCommandLookup)
 }
-
 export function createTreeCommandExecutor(facade: TreeFacade) {
   return createCommandExecutor(facade, treeMethodLookup)
 }
