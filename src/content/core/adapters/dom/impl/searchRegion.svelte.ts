@@ -7,20 +7,32 @@ import { Tree } from "@core/domain/entities/Tree"
 import { TextNode } from "@core/domain/entities/Node"
 
 // dom region to search
-let searchRegion: DOMSearchRegion = $state(document.body)
+let searchRegion: DOMSearchRegion | null = $state(null)
 
 export const searchRegionStore: DOMSearchRegionStore = {
   getSearchRegion() {
+    if (!searchRegion) searchRegion = document.body
     return searchRegion
   },
   setSearchRegion(region: DOMSearchRegion) {
     searchRegion = region
+    devLogger.log("Node Count", countAllNodes(region))
     return true
   },
 
   regionToTree() {
-    return convertSearchRegionToTree(searchRegion)
+    return convertSearchRegionToTree(searchRegion!)
   }
+}
+
+// for test
+function countAllNodes(rootElement: HTMLElement) {
+  const walker = document.createTreeWalker(rootElement, NodeFilter.SHOW_ELEMENT)
+  let count = 0
+  while (walker.nextNode()) {
+    count++
+  }
+  return count
 }
 
 // convert to dto

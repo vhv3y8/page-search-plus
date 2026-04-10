@@ -16,13 +16,14 @@ import { globalTreeStore } from "@core/adapters/tree/impl/globalTreeStore"
 // infra
 import type { Serializer, Transport } from "@infra/ports/Transport"
 import { TransportNameResolver } from "@infra/adapters/TransportNameResolver"
-import {
-  createTransferableSerializer,
-  createWebWorkerTransport
-} from "@infra/adapters/webworker/WebWorkerTransport"
+import { createWebWorkerTransport } from "@infra/adapters/webworker/WebWorkerTransport"
 import type { Facade } from "@infra/ports/Facade"
 import { createTreeCommandSender, treeCommandLookup } from "./TreeCommandBus"
 import type { DevLogger } from "@infra/ports/DevLogger"
+import {
+  createJSONSerializer,
+  type TransferableSerializer
+} from "@infra/adapters/webworker/TransferableSerializer"
 // web worker with vite
 import TreeWebWorker from "./treeWebWorker?worker&inline"
 
@@ -47,19 +48,18 @@ export function createTreeImplFacade(devLogger?: DevLogger): TreeFacade {
 
 // web worker transport
 export function createWebWorkerTreeFacade(devLogger?: DevLogger): TreeFacade {
-  devLogger?.log("creating worker")
   // infra
+  devLogger?.log("creating worker")
   const treeWebWorker = new TreeWebWorker()
   devLogger?.log("creating worker done")
-  const transferableSerializer: Serializer =
-    createTransferableSerializer(devLogger)
+  const serializer: TransferableSerializer = createJSONSerializer(devLogger)
   const treeWebWorkerTransport: Transport = createWebWorkerTransport(
     treeWebWorker,
-    transferableSerializer,
+    serializer,
     devLogger
   )
   const sendCommand = createTreeCommandSender(treeWebWorkerTransport)
-
+  // set use cases
   const treeFacade = {} as TreeFacade
   for (const useCaseName of Object.keys(treeCommandLookup)) {
     treeFacade[useCaseName] = (...payload: any) =>

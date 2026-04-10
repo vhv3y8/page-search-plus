@@ -18,15 +18,6 @@
       "js": ["content.js"]
     }
   ],
-  "web_accessible_resources": [
-    {
-      "matches": ["<all_urls>"],
-      "resources": ["treeWebWorker.js"]
-    }
-  ],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self';"
-  },
   "action": {
     "default_title": "Page Find Plus"
   },

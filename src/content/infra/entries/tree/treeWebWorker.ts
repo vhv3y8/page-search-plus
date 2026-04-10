@@ -2,14 +2,14 @@ import { createDispatcher } from "@infra/adapters/webworker/Dispatcher"
 import { createTreeCommandExecutor } from "./TreeCommandBus"
 import { createTreeImplFacade } from "./TreeFacade"
 import { workerDevLogger } from "@infra/adapters/devlogger/webworker"
-import { createTransferableSerializer } from "@infra/adapters/webworker/WebWorkerTransport"
+import { createJSONSerializer } from "@infra/adapters/webworker/TransferableSerializer"
 
 workerDevLogger.log("HI FROM WEBWORKER")
 
-const treeImplFacade = createTreeImplFacade(workerDevLogger)
+const treeUseCaseFacade = createTreeImplFacade(workerDevLogger)
 
-const serializer = createTransferableSerializer(workerDevLogger)
-const commandExecutor = createTreeCommandExecutor(treeImplFacade)
+const serializer = createJSONSerializer(workerDevLogger)
+const commandExecutor = createTreeCommandExecutor(treeUseCaseFacade)
 const dispatcher = createDispatcher(
   serializer,
   commandExecutor,

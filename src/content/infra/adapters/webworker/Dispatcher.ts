@@ -1,13 +1,13 @@
 import type { createCommandExecutor } from "@infra/ports/CommandBus"
-import type { WebWorkerSerializer } from "./WebWorkerTransport"
 import type { DevLogger } from "@infra/ports/DevLogger"
+import type { TransferableSerializer } from "./TransferableSerializer"
 
 export type Dispatcher = {
   handle(any: any): Promise<any>
 }
 
 export function createDispatcher(
-  serializer: WebWorkerSerializer,
+  serializer: TransferableSerializer,
   executor: ReturnType<typeof createCommandExecutor>,
   devLogger?: DevLogger
 ) {

@@ -2,6 +2,13 @@ import { type Plugin } from "vite"
 import { Worker } from "node:worker_threads"
 import path from "node:path"
 
+export function ProtobufPlugin(): Plugin {
+  return {
+    name: "scripts/plugins:protobuf-plugin",
+    buildStart() {}
+  }
+}
+
 // export function LogIdPlugin(): Plugin {
 //   return {
 //     name: "log-id",

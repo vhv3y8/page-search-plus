@@ -1,48 +1,10 @@
 import type { DevLogger } from "@infra/ports/DevLogger"
-import type { Serializer, Transport } from "src/content/infra/ports/Transport"
+import type { Transport } from "src/content/infra/ports/Transport"
+import type { TransferableSerializer } from "./TransferableSerializer"
 
-// serializer
-export interface WebWorkerSerializer extends Serializer {
-  serialize(payload: any): [message: any, transfer: Transferable[]]
-}
-export function createTransferableSerializer(
-  devLogger?: DevLogger
-): WebWorkerSerializer {
-  const transferableSerializer = {
-    serialize(data) {
-      const transfer: Transferable[] = []
-
-      // simple transferable testing with json stringify
-      const encoder = new TextEncoder()
-      const uint8Array = encoder.encode(JSON.stringify(data))
-      devLogger?.log("Transferable Serializer", "uint8Array", [uint8Array])
-      transfer.push(uint8Array.buffer)
-      devLogger?.log("Transferable Serializer", "Transferable[]", [transfer])
-      return [uint8Array, transfer]
-
-      // if typed array
-      // if (data instanceof Uint8Array || data instanceof Float32Array) {
-      //   devLogger?.log("Transferable Serializer", "IS TYPED ARRAY!")
-      //   transfer.push(data.buffer)
-      // } else if (data instanceof ArrayBuffer) {
-      //   transfer.push(data)
-      // }
-      // return [data, transfer]
-    },
-    deserialize(data) {
-      const decoder = new TextDecoder()
-      const jsonString = decoder.decode(data)
-      const parsedData = JSON.parse(jsonString)
-      return parsedData
-    }
-  } satisfies WebWorkerSerializer
-  return transferableSerializer
-}
-
-// transport
 export function createWebWorkerTransport(
   worker: Worker,
-  serializer: WebWorkerSerializer,
+  serializer: TransferableSerializer,
   devLogger?: DevLogger
 ): Transport {
   // worker.onmessage =
