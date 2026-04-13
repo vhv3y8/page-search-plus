@@ -8,13 +8,24 @@ import {
 } from "@infra/impls/webworker/TransferableSerializer"
 import { ProtobufSerializer } from "@infra/impls/protobuf/ProtobufSerializer"
 import { Tree } from "@infra/impls/protobuf/proto/Tree.proto"
+import { createTreeEntityMapper } from "@infra/impls/protobuf/proto/Tree.mapper"
 
 workerDevLogger.log("HI FROM WEBWORKER")
+const testSerializer = new ProtobufSerializer(
+  Tree,
+  createTreeEntityMapper(workerDevLogger),
+  workerDevLogger
+)
+workerDevLogger.log("testSerializer", testSerializer)
 
 const treeUseCaseFacade = createTreeImplFacade(workerDevLogger)
 
 const serializer = adaptTypedSerializerToTransferable(
-  new ProtobufSerializer(Tree, workerDevLogger)
+  new ProtobufSerializer(
+    Tree,
+    createTreeEntityMapper(workerDevLogger),
+    workerDevLogger
+  )
 )
 // const serializer = createJSONSerializer(workerDevLogger)
 const commandExecutor = createTreeCommandExecutor(treeUseCaseFacade)

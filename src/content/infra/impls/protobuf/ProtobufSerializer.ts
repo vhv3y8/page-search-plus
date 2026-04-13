@@ -2,6 +2,8 @@ import type { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire"
 import type { DevLogger } from "@infra/interfaces/DevLogger"
 import type { Serializer } from "@infra/interfaces/Serializer"
 
+export type EntityMapper<V, E> = (value: V) => E
+
 // ts-proto
 interface TsProtoCodecWrapper<T> {
   encode(message: T, writer?: BinaryWriter): BinaryWriter
@@ -12,6 +14,7 @@ interface TsProtoCodecWrapper<T> {
 export class ProtobufSerializer<T> implements Serializer {
   constructor(
     public codec: TsProtoCodecWrapper<T>,
+    public entityMapper: EntityMapper<T, any> | null = null,
     public devLogger?: DevLogger
   ) {}
 
@@ -29,10 +32,20 @@ export class ProtobufSerializer<T> implements Serializer {
     return encoded
   }
 
-  deserialize(buffer: Uint8Array, mapper: Function): T {
+  deserialize(buffer: Uint8Array): any {
     this.devLogger?.log("ProtobufSerializer", "deserialize", "buffer", buffer)
     const decoded = this.codec.decode(buffer)
     this.devLogger?.log("ProtobufSerializer", "deserialize", "decoded", decoded)
-    return decoded
+    if (this.entityMapper) {
+      this.devLogger?.log(
+        "ProtobufSerializer",
+        "deserialize",
+        "entity mapped",
+        this.entityMapper(decoded)
+      )
+      return this.entityMapper(decoded)
+    } else {
+      return decoded
+    }
   }
 }

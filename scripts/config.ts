@@ -33,7 +33,7 @@ export const commonConfig: InlineConfig = {
   },
   worker: {
     format: "iife",
-    plugins: () => []
+    plugins: () => [ProtobufPlugin()]
   },
   logLevel: "error"
 }
@@ -54,7 +54,7 @@ export function workerEntryConfig(entry: string): InlineConfig {
       minify: true
     },
     configFile: false,
-    plugins: []
+    plugins: [ProtobufPlugin()]
   }
   // console.error("[workerConfig]", workerConfig)
   return workerConfig

@@ -1,25 +1,29 @@
-import type { DevLogger } from "../../interfaces/DevLogger"
-import type { Transport } from "../../interfaces/Transport"
+import type { DevLogger } from "@infra/interfaces/DevLogger"
+import type { Transport } from "@infra/interfaces/Transport"
 import type { TransferableSerializer } from "./TransferableSerializer"
 
 export function createWebWorkerTransport(
   worker: Worker,
-  serializer: TransferableSerializer,
+  transferableSerializer: TransferableSerializer,
   devLogger?: DevLogger
 ): Transport {
   // worker.onmessage =
   const transport: Transport = {
     async send(payload) {
-      const serializedPayload = serializer.serialize(payload)
-      devLogger?.log("Serialized Payload", serializedPayload)
+      devLogger?.log("WebWorkerTransport", "payload", payload)
+      const {
+        message: serializedMessage,
+        transfer: serializedMessageTransfer
+      } = transferableSerializer.serialize(payload)
+      devLogger?.log("Serialized Payload", serializedMessage)
       devLogger?.log(
         "Buffer Bytelength?",
-        (serializedPayload["message"] as Uint8Array).buffer.byteLength
+        (serializedMessage["message"] as Uint8Array).buffer.byteLength
       )
-      worker.postMessage(serializedPayload, serializedPayload.transfer)
+      worker.postMessage(serializedMessage, serializedMessageTransfer)
       devLogger?.log(
         "Buffer Bytelength After Transfer?",
-        (serializedPayload["message"] as Uint8Array).buffer.byteLength
+        (serializedMessage["message"] as Uint8Array).buffer.byteLength
       )
     }
   }

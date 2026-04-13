@@ -1,5 +1,5 @@
+import type { DevLogger } from "@infra/interfaces/DevLogger"
 import type { Serializer } from "@infra/interfaces/Serializer"
-import type { DevLogger } from "../../interfaces/DevLogger"
 
 export interface TransferableSerializer extends Serializer {
   serialize(payload: any): { message: any; transfer: Transferable[] }
@@ -10,6 +10,8 @@ export function adaptTypedSerializerToTransferable(
 ): TransferableSerializer {
   const transferableSerializer: TransferableSerializer = {
     serialize(payload: any) {
+      // add only transferables
+      let transfer: Transferable[] = []
       const typedArray: { buffer: ArrayBuffer } = serializer.serialize(payload)
       return {
         message: typedArray,
@@ -23,14 +25,13 @@ export function adaptTypedSerializerToTransferable(
   return transferableSerializer
 }
 
+// simple transferable testing with json stringify
 export function createJSONSerializer(
   devLogger?: DevLogger
 ): TransferableSerializer {
   const transferableSerializer = {
     serialize(data) {
       const transfer: Transferable[] = []
-
-      // simple transferable testing with json stringify
       const encoder = new TextEncoder()
       const uint8Array = encoder.encode(JSON.stringify(data))
       devLogger?.log("Transferable Serializer", "uint8Array", [uint8Array])
@@ -40,15 +41,6 @@ export function createJSONSerializer(
         message: uint8Array,
         transfer
       }
-
-      // if typed array
-      // if (data instanceof Uint8Array || data instanceof Float32Array) {
-      //   devLogger?.log("Transferable Serializer", "IS TYPED ARRAY!")
-      //   transfer.push(data.buffer)
-      // } else if (data instanceof ArrayBuffer) {
-      //   transfer.push(data)
-      // }
-      // return [data, transfer]
     },
     deserialize(data) {
       const decoder = new TextDecoder()
@@ -59,8 +51,3 @@ export function createJSONSerializer(
   } satisfies TransferableSerializer
   return transferableSerializer
 }
-
-// proto
-// export function createProtobufTransferableSerializer(
-//   devLogger?: DevLogger
-// ): TransferableSerializer {}

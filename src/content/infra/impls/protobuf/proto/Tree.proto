@@ -1,9 +1,9 @@
 edition = "2023";
 
-message Tree { 
-  Node root = 1;
+message Tree {
+  Node root=1;
 }
 
 message Node {
-  string type = 2;
+  string type=1;
 }

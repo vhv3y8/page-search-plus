@@ -14,21 +14,21 @@ import {
 import type { TreeStore } from "@core/application/ports/TreeStore"
 import { globalTreeStore } from "@core/adapters/tree/impl/globalTreeStore"
 // infra
-import type { Transport } from "../../interfaces/Transport"
-import { TransportNameResolver } from "../../impls/TransportNameResolver"
-import { createWebWorkerTransport } from "../../impls/webworker/WebWorkerTransport"
-import type { Facade } from "../../interfaces/Facade"
-import { createTreeCommandSender, treeCommandLookup } from "./TreeCommandBus"
-import type { DevLogger } from "../../interfaces/DevLogger"
-import {
-  adaptTypedSerializerToTransferable,
-  createJSONSerializer,
-  type TransferableSerializer
-} from "../../impls/webworker/TransferableSerializer"
-// web worker with vite
-import TreeWebWorker from "./treeWebWorker?worker&inline"
 import { ProtobufSerializer } from "@infra/impls/protobuf/ProtobufSerializer"
 import { Tree } from "@infra/impls/protobuf/proto/Tree.proto"
+import type { Facade } from "@infra/interfaces/Facade"
+import type { DevLogger } from "@infra/interfaces/DevLogger"
+import {
+  adaptTypedSerializerToTransferable,
+  type TransferableSerializer
+} from "@infra/impls/webworker/TransferableSerializer"
+import type { Transport } from "@infra/interfaces/Transport"
+import { createWebWorkerTransport } from "@infra/impls/webworker/WebWorkerTransport"
+import { TransportNameResolver } from "@infra/impls/TransportNameResolver"
+import { createTreeCommandSender, treeCommandLookup } from "./TreeCommandBus"
+// web worker with vite
+import TreeWebWorker from "./treeWebWorker?worker&inline"
+// import { createTreeEntityMapper } from "@infra/impls/protobuf/proto/Tree.mapper"
 
 export interface TreeFacade extends Facade {
   initializeTree: InitializeTreeUseCase
@@ -56,7 +56,7 @@ export function createWebWorkerTreeFacade(devLogger?: DevLogger): TreeFacade {
   const treeWebWorker = new TreeWebWorker()
   devLogger?.log("creating worker done")
   const serializer: TransferableSerializer = adaptTypedSerializerToTransferable(
-    new ProtobufSerializer(Tree, devLogger)
+    new ProtobufSerializer(Tree, null, devLogger)
   )
   // const serializer: TransferableSerializer = createJSONSerializer(devLogger)
   const treeWebWorkerTransport: Transport = createWebWorkerTransport(

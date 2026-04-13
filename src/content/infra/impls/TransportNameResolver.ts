@@ -1,4 +1,4 @@
-import type { DynamicStrategy } from "../interfaces/DynamicStrategy"
+import type { DynamicStrategy } from "@infra/interfaces/DynamicStrategy"
 
 type TransportName = "main" | "webworker"
 
