@@ -21,11 +21,14 @@ import type { Facade } from "../../interfaces/Facade"
 import { createTreeCommandSender, treeCommandLookup } from "./TreeCommandBus"
 import type { DevLogger } from "../../interfaces/DevLogger"
 import {
+  adaptTypedSerializerToTransferable,
   createJSONSerializer,
   type TransferableSerializer
 } from "../../impls/webworker/TransferableSerializer"
 // web worker with vite
 import TreeWebWorker from "./treeWebWorker?worker&inline"
+import { ProtobufSerializer } from "@infra/impls/protobuf/ProtobufSerializer"
+import { Tree } from "@infra/impls/protobuf/proto/Tree.proto"
 
 export interface TreeFacade extends Facade {
   initializeTree: InitializeTreeUseCase
@@ -52,7 +55,10 @@ export function createWebWorkerTreeFacade(devLogger?: DevLogger): TreeFacade {
   devLogger?.log("creating worker")
   const treeWebWorker = new TreeWebWorker()
   devLogger?.log("creating worker done")
-  const serializer: TransferableSerializer = createJSONSerializer(devLogger)
+  const serializer: TransferableSerializer = adaptTypedSerializerToTransferable(
+    new ProtobufSerializer(Tree, devLogger)
+  )
+  // const serializer: TransferableSerializer = createJSONSerializer(devLogger)
   const treeWebWorkerTransport: Transport = createWebWorkerTransport(
     treeWebWorker,
     serializer,

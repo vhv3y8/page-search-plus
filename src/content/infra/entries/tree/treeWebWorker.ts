@@ -2,13 +2,21 @@ import { createDispatcher } from "@infra/impls/webworker/Dispatcher"
 import { createTreeCommandExecutor } from "./TreeCommandBus"
 import { createTreeImplFacade } from "./TreeFacade"
 import { workerDevLogger } from "@infra/impls/devlogger/webworker"
-import { createJSONSerializer } from "@infra/impls/webworker/TransferableSerializer"
+import {
+  adaptTypedSerializerToTransferable
+  // createJSONSerializer
+} from "@infra/impls/webworker/TransferableSerializer"
+import { ProtobufSerializer } from "@infra/impls/protobuf/ProtobufSerializer"
+import { Tree } from "@infra/impls/protobuf/proto/Tree.proto"
 
 workerDevLogger.log("HI FROM WEBWORKER")
 
 const treeUseCaseFacade = createTreeImplFacade(workerDevLogger)
 
-const serializer = createJSONSerializer(workerDevLogger)
+const serializer = adaptTypedSerializerToTransferable(
+  new ProtobufSerializer(Tree, workerDevLogger)
+)
+// const serializer = createJSONSerializer(workerDevLogger)
 const commandExecutor = createTreeCommandExecutor(treeUseCaseFacade)
 const dispatcher = createDispatcher(
   serializer,

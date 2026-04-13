@@ -5,11 +5,23 @@ export interface TransferableSerializer extends Serializer {
   serialize(payload: any): { message: any; transfer: Transferable[] }
 }
 
-// export function adaptToTransferableSerializer(
-//   serializer: Serializer
-// ): TransferableSerializer {
-//   let transfer: Transferable[] = []
-// }
+export function adaptTypedSerializerToTransferable(
+  serializer: Serializer
+): TransferableSerializer {
+  const transferableSerializer: TransferableSerializer = {
+    serialize(payload: any) {
+      const typedArray: { buffer: ArrayBuffer } = serializer.serialize(payload)
+      return {
+        message: typedArray,
+        transfer: [typedArray.buffer]
+      }
+    },
+    deserialize(data) {
+      return serializer.deserialize(data)
+    }
+  }
+  return transferableSerializer
+}
 
 export function createJSONSerializer(
   devLogger?: DevLogger

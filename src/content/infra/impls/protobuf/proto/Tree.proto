@@ -1,11 +1,9 @@
 edition = "2023";
 
-message SearchRequest {
-  string query = 1;
-  int32 page_number = 2;
-  int32 results_per_page = 3;
+message Tree { 
+  Node root = 1;
 }
 
-message Tree { }
- 
-message Node {}
+message Node {
+  string type = 2;
+}
